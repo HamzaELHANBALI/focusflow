@@ -4,7 +4,39 @@
 
 ### 404 NOT_FOUND Error
 
-If you're seeing a `404: NOT_FOUND` error when deploying to Vercel, check the following:
+If you're seeing a `404: NOT_FOUND` error when deploying to Vercel, this usually means:
+
+1. **The route handler is throwing an error during initialization** (most common)
+2. **Environment variable is missing** (causes early return that might appear as 404)
+3. **Build issue** (routes not being included in build)
+
+**Quick Diagnostic Steps:**
+
+1. **Test the health endpoint:**
+   Visit: `https://your-domain.vercel.app/api/health`
+   - If this works → API routes are being built correctly
+   - If this also 404s → There's a build or routing issue
+
+2. **Check Vercel Function Logs:**
+   - Go to your Vercel project → **Deployments** → Click on deployment
+   - Go to **Functions** tab
+   - Look for any errors or warnings
+   - Check if the functions are listed (should see `/api/subtasks` and `/api/reflection`)
+
+3. **Verify Environment Variables:**
+   - Go to **Settings** → **Environment Variables**
+   - Ensure `OPENAI_API_KEY` is set for **all environments**
+   - The key should start with `sk-`
+   - After adding, **redeploy** (environment variables require redeploy)
+
+4. **Check Build Logs:**
+   - Look for TypeScript errors
+   - Look for missing dependencies
+   - Ensure build completes successfully
+
+**If health endpoint works but other routes 404:**
+
+The issue is likely in the route handler. Check the following:
 
 #### 1. Environment Variables
 **Most Common Cause:** Missing `OPENAI_API_KEY` in Vercel environment variables.
