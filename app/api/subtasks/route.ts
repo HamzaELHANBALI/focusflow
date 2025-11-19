@@ -3,6 +3,7 @@ import OpenAI from "openai";
 
 export const runtime = "nodejs"; // OpenAI SDK requires Node.js runtime
 export const dynamic = "force-dynamic"; // Ensure routes are not statically optimized
+export const maxDuration = 30; // Maximum execution time in seconds
 
 export async function GET() {
   return NextResponse.json(
