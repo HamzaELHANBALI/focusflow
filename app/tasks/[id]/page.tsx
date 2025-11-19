@@ -128,31 +128,33 @@ export default function TaskDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen bg-transparent p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
         <Button
           variant="ghost"
           onClick={() => router.push("/tasks")}
-          className="mb-2"
+          className="mb-2 hover:bg-slate-100"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Tasks
         </Button>
 
-        <Card>
+        <Card className="border-slate-200 shadow-md">
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-lg sm:text-xl">Big Task</CardTitle>
+            <CardTitle className="text-lg sm:text-xl bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+              Big Task
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
-            <p className="text-sm sm:text-base text-slate-700 break-words">{task.bigTask}</p>
+            <p className="text-sm sm:text-base text-slate-700 break-words font-medium">{task.bigTask}</p>
           </CardContent>
         </Card>
 
         {showTimer && activeSubtask ? (
           <div className="space-y-4">
-            <Card>
+            <Card className="border-slate-200 shadow-lg">
               <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-lg sm:text-xl break-words">
+                <CardTitle className="text-lg sm:text-xl break-words bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
                   Focus Session: {activeSubtask.title}
                 </CardTitle>
               </CardHeader>
@@ -162,9 +164,11 @@ export default function TaskDetailPage() {
             </Card>
           </div>
         ) : (
-          <Card>
+          <Card className="border-slate-200 shadow-md">
             <CardHeader className="p-4 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl">Subtasks</CardTitle>
+              <CardTitle className="text-lg sm:text-xl bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                Subtasks
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4 sm:p-6">
               <SubtaskList

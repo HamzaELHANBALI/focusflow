@@ -63,20 +63,23 @@ export default function NewTaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen bg-transparent p-4 sm:p-6 md:p-8">
       <div className="max-w-2xl mx-auto">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-4 sm:mb-6"
+          className="mb-4 sm:mb-6 hover:bg-slate-100"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
 
-        <Card>
+        <Card className="border-slate-200 shadow-lg">
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-xl sm:text-2xl">Create New Task</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+              Create New Task
+            </CardTitle>
+            <p className="text-sm text-slate-500 mt-1">Break down your goal into actionable steps</p>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
             <form onSubmit={handleSubmit} className="space-y-4">

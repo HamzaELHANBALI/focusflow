@@ -34,10 +34,13 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 md:p-8">
+    <div className="min-h-screen bg-transparent p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">My Tasks</h1>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">My Tasks</h1>
+            <p className="text-sm text-slate-500">Manage your focus sessions</p>
+          </div>
           <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
             <Button
               variant="outline"
@@ -64,15 +67,20 @@ export default function TasksPage() {
         </div>
 
         {tasks.length === 0 ? (
-          <Card>
+          <Card className="border-slate-200 shadow-lg">
             <CardContent className="p-6 sm:p-8 md:p-12 text-center">
+              <div className="mb-4 flex justify-center">
+                <div className="h-16 w-16 bg-gradient-to-br from-slate-900 to-slate-700 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Plus className="h-8 w-8 text-white" />
+                </div>
+              </div>
               <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-2">
                 No tasks yet
               </h2>
               <p className="text-sm sm:text-base text-slate-600 mb-6">
                 Create your first task to get started with FocusFlow.
               </p>
-              <Button onClick={() => router.push("/new")} size="lg" className="w-full sm:w-auto">
+              <Button onClick={() => router.push("/new")} size="lg" className="w-full sm:w-auto shadow-md">
                 <Plus className="mr-2 h-4 w-4" />
                 Create Your First Task
               </Button>
@@ -86,7 +94,7 @@ export default function TasksPage() {
               return (
                 <Card
                   key={task.id}
-                  className="cursor-pointer hover:shadow-md transition-shadow"
+                  className="cursor-pointer hover:shadow-lg hover:border-slate-300 transition-all duration-200 border-slate-200"
                   onClick={() => router.push(`/tasks/${task.id}`)}
                 >
                   <CardContent className="p-4 sm:p-6">
@@ -107,9 +115,9 @@ export default function TasksPage() {
                           <span>•</span>
                           <span>{format(new Date(task.createdAt), "MMM d, yyyy")}</span>
                         </div>
-                        <div className="w-full bg-slate-200 rounded-full h-2">
+                        <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
                           <div
-                            className="bg-slate-900 h-2 rounded-full transition-all"
+                            className="bg-gradient-to-r from-slate-900 to-slate-700 h-2.5 rounded-full transition-all duration-300"
                             style={{ width: `${progress}%` }}
                           />
                         </div>
