@@ -93,7 +93,7 @@ export function ReflectionModal({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Session Reflection</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl">Session Reflection</DialogTitle>
         </DialogHeader>
 
         {!aiResponse ? (
@@ -107,6 +107,7 @@ export function ReflectionModal({
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Describe what you accomplished during this session..."
                 rows={5}
+                className="w-full"
               />
             </div>
 
@@ -114,27 +115,29 @@ export function ReflectionModal({
               <label className="text-sm font-medium mb-2 block">
                 Did you finish this subtask?
               </label>
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3">
                 <Button
                   variant={finished ? "default" : "outline"}
                   onClick={() => setFinished(true)}
+                  className="flex-1 sm:flex-initial"
                 >
                   Yes
                 </Button>
                 <Button
                   variant={!finished ? "default" : "outline"}
                   onClick={() => setFinished(false)}
+                  className="flex-1 sm:flex-initial"
                 >
                   No
                 </Button>
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4">
-              <Button variant="outline" onClick={handleClose}>
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-4">
+              <Button variant="outline" onClick={handleClose} className="w-full sm:w-auto">
                 Cancel
               </Button>
-              <Button onClick={handleSubmit} disabled={loading}>
+              <Button onClick={handleSubmit} disabled={loading} className="w-full sm:w-auto">
                 {loading ? "Submitting..." : "Submit"}
               </Button>
             </div>
@@ -178,7 +181,7 @@ export function ReflectionModal({
             </Card>
 
             <div className="flex justify-end">
-              <Button onClick={handleClose}>Close</Button>
+              <Button onClick={handleClose} className="w-full sm:w-auto">Close</Button>
             </div>
           </div>
         )}

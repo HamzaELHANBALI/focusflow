@@ -13,12 +13,12 @@ export function SessionCard({ session }: SessionCardProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">
+      <CardHeader className="p-4 sm:p-6">
+        <CardTitle className="text-base sm:text-lg">
           {format(date, "MMM d, yyyy 'at' h:mm a")}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="p-4 sm:p-6 space-y-3 sm:space-y-4">
         <div>
           <p className="text-sm font-medium text-slate-700 mb-1">Big Task:</p>
           <p className="text-sm text-slate-600">{session.bigTask}</p>

@@ -61,22 +61,22 @@ export default function NewTaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 md:p-8">
       <div className="max-w-2xl mx-auto">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-6"
+          className="mb-4 sm:mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Create New Task</CardTitle>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-xl sm:text-2xl">Create New Task</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
@@ -104,16 +104,17 @@ export default function NewTaskPage() {
                 </div>
               )}
 
-              <div className="flex justify-end gap-3">
+              <div className="flex flex-col sm:flex-row justify-end gap-3">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => router.back()}
                   disabled={loading}
+                  className="w-full sm:w-auto"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={loading || !task.trim()}>
+                <Button type="submit" disabled={loading || !task.trim()} className="w-full sm:w-auto">
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

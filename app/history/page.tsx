@@ -31,33 +31,34 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <Button variant="ghost" onClick={() => router.back()}>
+        <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
+          <Button variant="ghost" onClick={() => router.back()} className="flex-shrink-0">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
           {sessions.length > 0 && (
-            <Button variant="outline" onClick={handleClearSessions}>
+            <Button variant="outline" onClick={handleClearSessions} className="flex-shrink-0">
               <Trash2 className="mr-2 h-4 w-4" />
-              Clear History
+              <span className="hidden sm:inline">Clear History</span>
+              <span className="sm:hidden">Clear</span>
             </Button>
           )}
         </div>
 
-        <h1 className="text-3xl font-bold text-slate-900 mb-6">Session History</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4 sm:mb-6">Session History</h1>
 
         {sessions.length === 0 ? (
           <Card>
-            <CardContent className="p-12 text-center">
-              <p className="text-slate-500">
+            <CardContent className="p-6 sm:p-8 md:p-12 text-center">
+              <p className="text-sm sm:text-base text-slate-500">
                 No sessions yet. Complete a focus session to see your history here.
               </p>
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {sessions.map((session) => (
               <SessionCard key={session.id} session={session} />
             ))}

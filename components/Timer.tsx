@@ -65,10 +65,10 @@ export function Timer({ onComplete }: TimerProps) {
 
   return (
     <Card className="w-full">
-      <CardContent className="p-6">
-        <div className="flex flex-col items-center space-y-6">
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex flex-col items-center space-y-4 sm:space-y-6">
           <div className="relative">
-            <div className="text-6xl font-mono font-bold text-slate-900">
+            <div className="text-5xl sm:text-6xl font-mono font-bold text-slate-900">
               {formatTime(timeLeft)}
             </div>
             <div className="absolute -bottom-2 left-0 right-0 h-1 bg-slate-100 rounded-full overflow-hidden">
@@ -79,19 +79,19 @@ export function Timer({ onComplete }: TimerProps) {
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
             {!isRunning ? (
-              <Button onClick={handleStart} size="lg">
+              <Button onClick={handleStart} size="lg" className="flex-1 sm:flex-initial">
                 <Play className="mr-2 h-4 w-4" />
                 Start
               </Button>
             ) : (
-              <Button onClick={handlePause} variant="outline" size="lg">
+              <Button onClick={handlePause} variant="outline" size="lg" className="flex-1 sm:flex-initial">
                 <Pause className="mr-2 h-4 w-4" />
                 Pause
               </Button>
             )}
-            <Button onClick={handleReset} variant="outline" size="lg">
+            <Button onClick={handleReset} variant="outline" size="lg" className="flex-1 sm:flex-initial">
               <RotateCcw className="mr-2 h-4 w-4" />
               Reset
             </Button>

@@ -36,7 +36,7 @@ export function SubtaskList({ subtasks, onStartSession }: SubtaskListProps) {
   if (subtasks.length === 0) {
     return (
       <Card>
-        <CardContent className="p-6 text-center text-slate-500">
+        <CardContent className="p-4 sm:p-6 text-center text-slate-500 text-sm sm:text-base">
           No subtasks yet. Create a new task to get started!
         </CardContent>
       </Card>
@@ -44,22 +44,25 @@ export function SubtaskList({ subtasks, onStartSession }: SubtaskListProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 sm:space-y-3">
       {subtasks.map((subtask) => (
         <Card
           key={subtask.id}
           className={`${getStatusColor(subtask.status)} transition-colors`}
         >
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 flex-1">
-                {getStatusIcon(subtask.status)}
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex items-center justify-between gap-2 sm:gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <div className="flex-shrink-0">
+                  {getStatusIcon(subtask.status)}
+                </div>
                 <span
-                  className={`flex-1 ${
+                  className={`flex-1 text-sm sm:text-base truncate ${
                     subtask.status === "done"
                       ? "line-through text-slate-500"
                       : "text-slate-900"
                   }`}
+                  title={subtask.title}
                 >
                   {subtask.title}
                 </span>
@@ -69,10 +72,14 @@ export function SubtaskList({ subtasks, onStartSession }: SubtaskListProps) {
                   variant="outline"
                   size="sm"
                   onClick={() => onStartSession(subtask)}
+                  className="flex-shrink-0"
                 >
-                  {subtask.status === "in_progress"
-                    ? "Continue"
-                    : "Start"}
+                  <span className="hidden sm:inline">
+                    {subtask.status === "in_progress" ? "Continue" : "Start"}
+                  </span>
+                  <span className="sm:hidden">
+                    {subtask.status === "in_progress" ? "→" : "▶"}
+                  </span>
                 </Button>
               )}
             </div>
