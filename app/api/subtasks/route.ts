@@ -34,13 +34,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = `Break the following task into 3–7 small, actionable, developer-friendly subtasks.
+    const prompt = `Analyze the following task and break it down into the appropriate number of small, actionable subtasks.
 
-Provide **only** a list of 3–7 short titles. Each title should be a single line, concise and actionable.
+IMPORTANT RULES:
+- If the task is simple and can be done in one step, return "NO_SUBTASKS" (no subtasks needed)
+- If the task needs 1-2 subtasks, return exactly that many
+- If the task needs 3-7 subtasks, return that many
+- Only create subtasks if they are truly needed - don't create unnecessary breakdowns
+- Each subtask should be a single, actionable step
+- Keep subtask titles concise (one line each)
 
 Task: ${task}
 
-Return only the list of subtasks, one per line, without numbering or bullets.`;
+Return only the list of subtasks, one per line, without numbering or bullets. If no subtasks are needed, return only "NO_SUBTASKS".`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -48,7 +54,7 @@ Return only the list of subtasks, one per line, without numbering or bullets.`;
         {
           role: "system",
           content:
-            "You are a helpful assistant that breaks down large tasks into small, actionable subtasks. Return only the list of subtasks, one per line.",
+            "You are a helpful assistant that intelligently breaks down tasks. Only create subtasks if they are truly needed. If a task is simple enough to do directly, return 'NO_SUBTASKS'. Otherwise, return only the necessary subtasks, one per line.",
         },
         {
           role: "user",
@@ -61,19 +67,18 @@ Return only the list of subtasks, one per line, without numbering or bullets.`;
 
     const responseText =
       completion.choices[0]?.message?.content?.trim() || "";
+    
+    // Check if AI determined no subtasks are needed
+    if (responseText.toUpperCase().includes("NO_SUBTASKS") || responseText.toUpperCase().includes("NO SUBTASKS")) {
+      return NextResponse.json({ subtasks: [] });
+    }
+
     const subtasks = responseText
       .split("\n")
       .map((line) => line.trim())
-      .filter((line) => line.length > 0)
-      .slice(0, 7);
+      .filter((line) => line.length > 0 && !line.toUpperCase().includes("NO_SUBTASKS"));
 
-    if (subtasks.length === 0) {
-      return NextResponse.json(
-        { error: "Failed to generate subtasks" },
-        { status: 500 }
-      );
-    }
-
+    // Return empty array if no valid subtasks, or the subtasks
     return NextResponse.json({ subtasks });
   } catch (error) {
     console.error("Error generating subtasks:", error);

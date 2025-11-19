@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Timer } from "@/components/Timer";
 import { SubtaskList } from "@/components/SubtaskList";
 import { ReflectionModal } from "@/components/ReflectionModal";
+import { TimerDurationModal } from "@/components/TimerDurationModal";
 import {
   getTask,
   updateSubtaskStatus,
@@ -27,6 +28,8 @@ export default function TaskDetailPage() {
   const [activeSubtask, setActiveSubtask] = useState<Subtask | null>(null);
   const [showReflection, setShowReflection] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
+  const [showTimerDurationModal, setShowTimerDurationModal] = useState(false);
+  const [pendingSubtask, setPendingSubtask] = useState<Subtask | null>(null);
   const [timerDuration, setTimerDuration] = useState(25 * 60);
 
   useEffect(() => {
@@ -44,14 +47,22 @@ export default function TaskDetailPage() {
 
   const handleStartSession = (subtask: Subtask) => {
     if (!task) return;
-    setActiveSubtask(subtask);
+    setPendingSubtask(subtask);
+    setShowTimerDurationModal(true);
+  };
+
+  const handleTimerDurationConfirm = (duration: number) => {
+    if (!task || !pendingSubtask) return;
+    setTimerDuration(duration);
+    setActiveSubtask(pendingSubtask);
     setShowTimer(true);
-    updateSubtaskStatus(subtask.id, "in_progress", task.id);
+    updateSubtaskStatus(pendingSubtask.id, "in_progress", task.id);
     // Reload task
     const updatedTask = getTask(taskId);
     if (updatedTask) {
       setTask(updatedTask);
     }
+    setPendingSubtask(null);
   };
 
   const handleTimerComplete = () => {
@@ -173,6 +184,12 @@ export default function TaskDetailPage() {
             onSubmit={handleReflectionSubmit}
           />
         )}
+
+        <TimerDurationModal
+          open={showTimerDurationModal}
+          onOpenChange={setShowTimerDurationModal}
+          onConfirm={handleTimerDurationConfirm}
+        />
       </div>
     </div>
   );

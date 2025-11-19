@@ -37,7 +37,8 @@ export function SubtaskList({ subtasks, onStartSession }: SubtaskListProps) {
     return (
       <Card>
         <CardContent className="p-4 sm:p-6 text-center text-slate-500 text-sm sm:text-base">
-          No subtasks yet. Create a new task to get started!
+          <p className="mb-2">This task doesn't need subtasks.</p>
+          <p className="text-xs">You can work on it directly!</p>
         </CardContent>
       </Card>
     );

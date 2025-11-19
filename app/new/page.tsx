@@ -36,7 +36,7 @@ export default function NewTaskPage() {
       }
 
       const data = await response.json();
-      const subtasks: Subtask[] = data.subtasks.map((title: string) => ({
+      const subtasks: Subtask[] = (data.subtasks || []).map((title: string) => ({
         id: crypto.randomUUID(),
         title,
         status: "pending" as const,
