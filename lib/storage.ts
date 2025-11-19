@@ -4,6 +4,14 @@ export interface Subtask {
   status: "pending" | "in_progress" | "done";
 }
 
+export interface Task {
+  id: string;
+  bigTask: string;
+  subtasks: Subtask[];
+  createdAt: number;
+}
+
+// Legacy interface for backward compatibility
 export interface CurrentTask {
   bigTask: string;
   subtasks: Subtask[];
@@ -23,8 +31,10 @@ export interface Session {
   };
 }
 
-const CURRENT_TASK_KEY = "focusflow-current-task";
+const CURRENT_TASK_KEY = "focusflow-current-task"; // Legacy key
+const TASKS_KEY = "focusflow-tasks";
 const SESSIONS_KEY = "focusflow-sessions";
+const TIMER_DURATION_KEY = "focusflow-timer-duration";
 
 export function saveCurrentTask(task: CurrentTask): void {
   if (typeof window === "undefined") return;
@@ -81,18 +91,131 @@ export function clearSessions(): void {
 
 export function updateSubtaskStatus(
   subtaskId: string,
-  status: Subtask["status"]
+  status: Subtask["status"],
+  taskId?: string
 ): void {
   if (typeof window === "undefined") return;
   try {
-    const task = loadCurrentTask();
-    if (!task) return;
-    task.subtasks = task.subtasks.map((st) =>
-      st.id === subtaskId ? { ...st, status } : st
-    );
-    saveCurrentTask(task);
+    if (taskId) {
+      // Update subtask in specific task
+      const tasks = loadTasks();
+      const task = tasks.find((t) => t.id === taskId);
+      if (task) {
+        task.subtasks = task.subtasks.map((st) =>
+          st.id === subtaskId ? { ...st, status } : st
+        );
+        saveTasks(tasks);
+      }
+    } else {
+      // Legacy: update current task
+      const task = loadCurrentTask();
+      if (!task) return;
+      task.subtasks = task.subtasks.map((st) =>
+        st.id === subtaskId ? { ...st, status } : st
+      );
+      saveCurrentTask(task);
+    }
   } catch (error) {
     console.error("Failed to update subtask status:", error);
+  }
+}
+
+// New functions for multiple tasks
+export function saveTask(task: Task): void {
+  if (typeof window === "undefined") return;
+  try {
+    const tasks = loadTasks();
+    const existingIndex = tasks.findIndex((t) => t.id === task.id);
+    if (existingIndex >= 0) {
+      tasks[existingIndex] = task;
+    } else {
+      tasks.push(task);
+    }
+    saveTasks(tasks);
+  } catch (error) {
+    console.error("Failed to save task:", error);
+  }
+}
+
+export function loadTasks(): Task[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const data = localStorage.getItem(TASKS_KEY);
+    if (!data) {
+      // Migrate from legacy current task
+      const legacyTask = loadCurrentTask();
+      if (legacyTask) {
+        const migratedTask: Task = {
+          id: crypto.randomUUID(),
+          bigTask: legacyTask.bigTask,
+          subtasks: legacyTask.subtasks,
+          createdAt: Date.now(),
+        };
+        saveTask(migratedTask);
+        return [migratedTask];
+      }
+      return [];
+    }
+    return JSON.parse(data) as Task[];
+  } catch (error) {
+    console.error("Failed to load tasks:", error);
+    return [];
+  }
+}
+
+export function saveTasks(tasks: Task[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+  } catch (error) {
+    console.error("Failed to save tasks:", error);
+  }
+}
+
+export function getTask(taskId: string): Task | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const tasks = loadTasks();
+    return tasks.find((t) => t.id === taskId) || null;
+  } catch (error) {
+    console.error("Failed to get task:", error);
+    return null;
+  }
+}
+
+export function deleteTask(taskId: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const tasks = loadTasks();
+    const filtered = tasks.filter((t) => t.id !== taskId);
+    saveTasks(filtered);
+  } catch (error) {
+    console.error("Failed to delete task:", error);
+  }
+}
+
+// Timer duration functions
+export function getTimerDuration(): number {
+  if (typeof window === "undefined") return 25 * 60; // Default 25 minutes
+  try {
+    const data = localStorage.getItem(TIMER_DURATION_KEY);
+    if (!data) return 25 * 60;
+    const duration = parseInt(data, 10);
+    return duration > 0 ? duration : 25 * 60;
+  } catch (error) {
+    console.error("Failed to load timer duration:", error);
+    return 25 * 60;
+  }
+}
+
+export function saveTimerDuration(duration: number): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (duration > 0) {
+      localStorage.setItem(TIMER_DURATION_KEY, duration.toString());
+    }
+  } catch (error) {
+    console.error("Failed to save timer duration:", error);
   }
 }
 

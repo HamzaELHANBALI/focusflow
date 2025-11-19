@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import { saveCurrentTask, type CurrentTask, type Subtask } from "@/lib/storage";
+import { saveTask, type Task, type Subtask } from "@/lib/storage";
 
 export default function NewTaskPage() {
   const router = useRouter();
@@ -42,13 +42,15 @@ export default function NewTaskPage() {
         status: "pending" as const,
       }));
 
-      const currentTask: CurrentTask = {
+      const newTask: Task = {
+        id: crypto.randomUUID(),
         bigTask: task.trim(),
         subtasks,
+        createdAt: Date.now(),
       };
 
-      saveCurrentTask(currentTask);
-      router.push("/");
+      saveTask(newTask);
+      router.push("/tasks");
     } catch (err) {
       setError(
         err instanceof Error

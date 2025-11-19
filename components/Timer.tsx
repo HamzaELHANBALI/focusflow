@@ -4,15 +4,20 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Play, Pause, RotateCcw } from "lucide-react";
+import { getTimerDuration } from "@/lib/storage";
 
 interface TimerProps {
   onComplete: () => void;
+  duration?: number; // Duration in seconds, defaults to saved preference
 }
 
-const POMODORO_DURATION = 25 * 60; // 25 minutes in seconds
-
-export function Timer({ onComplete }: TimerProps) {
-  const [timeLeft, setTimeLeft] = useState(POMODORO_DURATION);
+export function Timer({ onComplete, duration }: TimerProps) {
+  const [initialDuration, setInitialDuration] = useState(() => {
+    if (duration) return duration;
+    return getTimerDuration();
+  });
+  
+  const [timeLeft, setTimeLeft] = useState(initialDuration);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -56,12 +61,19 @@ export function Timer({ onComplete }: TimerProps) {
     setIsRunning(false);
   };
 
+  useEffect(() => {
+    if (duration && duration !== initialDuration) {
+      setInitialDuration(duration);
+      setTimeLeft(duration);
+    }
+  }, [duration, initialDuration]);
+
   const handleReset = () => {
     setIsRunning(false);
-    setTimeLeft(POMODORO_DURATION);
+    setTimeLeft(initialDuration);
   };
 
-  const progress = ((POMODORO_DURATION - timeLeft) / POMODORO_DURATION) * 100;
+  const progress = ((initialDuration - timeLeft) / initialDuration) * 100;
 
   return (
     <Card className="w-full">
